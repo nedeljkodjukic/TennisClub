@@ -1,6 +1,6 @@
 using System;
 
-namespace TennisClub
+namespace TennisClub.Api
 {
     public class WeatherForecast
     {
