@@ -5,6 +5,7 @@
 
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
+/* eslint-env node */
 
 module.exports = function (/* ctx */) {
   return {
@@ -63,6 +64,12 @@ module.exports = function (/* ctx */) {
 
       // https://quasar.dev/quasar-cli/handling-webpack
       extendWebpack (cfg) {
+cfg.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /node_modules/
+        })
       },
     },
 
@@ -109,9 +116,9 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `tennisclubapp`,
-        short_name: `tennisclubapp`,
-        description: `A Quasar Framework app`,
+        name: `TennisClub`,
+        short_name: `TennisClub`,
+        description: ``,
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -176,7 +183,7 @@ module.exports = function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'tennisclubapp'
+        appId: 'tennis_club'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
