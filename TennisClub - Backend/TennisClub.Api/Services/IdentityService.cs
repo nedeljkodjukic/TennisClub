@@ -31,17 +31,17 @@ namespace TennisClub.Api.Services
 
         public async Task<TokenOutputModel> LoginUserAsync(LoginInputModel input)
         {
-            if (await this.userManager.FindByEmailAsync(input.Email) == null)
+            var user = await this.userManager.FindByEmailAsync(input.Email);
+
+            if (user == null)
             {
                 throw new Exception("Ne postoji korisnik");
             }
 
-            var result = await this.signInManager.PasswordSignInAsync(input.Email, input.Password, false, false);
+            var result = await this.signInManager.PasswordSignInAsync(user.UserName, input.Password, false, false);
 
             if (result.Succeeded)
             {
-                var user = await userManager.FindByEmailAsync(input.Email);
-
                 var roles = await userManager.GetRolesAsync(user);
 
                 var key = configuration["Authorization:SecretKey"];
@@ -86,9 +86,11 @@ namespace TennisClub.Api.Services
             {
                 await userManager.AddToRoleAsync(user, role.ToString());
             }
-
-            //obrisi usera iz baze
-            throw new Exception("");
+            else
+            {
+                //obrisi usera iz baze
+                throw new Exception("");
+            }
         }
     }
 }
