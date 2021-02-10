@@ -1,15 +1,13 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using TennisClub.Api.Extensions;
 
 namespace TennisClub.Api
 {
@@ -26,6 +24,17 @@ namespace TennisClub.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddApplicationServices();
+
+            services.AddMongoDbProvider(Configuration);
+
+            services.AddJwtAuthentication(Configuration);
+
+            services.AddSwaggerGen(x =>
+            {
+                x.SwaggerDoc("v1", new OpenApiInfo { Title = "Tennis Club Api", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,9 +45,44 @@ namespace TennisClub.Api
                 app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseExceptionHandler(configure =>
+            {
+                configure.Run(async context =>
+                {
+                    var exeptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    if(exeptionHandlerPathFeature.Error is Exception ex)
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync(ex.Message);
+                    }
+                });
+            });
+
+            var swaggerSection = Configuration.GetSection("SwaggerOptions");
+
+            app.UseSwagger(option =>
+            {
+                option.RouteTemplate = swaggerSection["JsonRoute"];
+            });
+
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint(swaggerSection["UiEndpoint"], swaggerSection["Description"]);
+            });
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(options => options
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
