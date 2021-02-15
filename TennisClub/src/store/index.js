@@ -1,9 +1,12 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 
 // import example from './module-example'
 
-Vue.use(Vuex)
+import auth from "./auth";
+import apiRequest from "./apiRequest";
+
+Vue.use(Vuex);
 
 /*
  * If not building with SSR mode, you can
@@ -14,16 +17,17 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function (/* { ssrContext } */) {
-  const Store = new Vuex.Store({
-    modules: {
-      // example
-    },
+const Store = new Vuex.Store({
+  modules: { auth, apiRequest },
+  strict: process.env.DEBUGGING
+});
 
-    // enable strict mode (adds overhead!)
-    // for dev mode only
-    strict: process.env.DEBUGGING
-  })
+Store.subscribe((mutation, state) => {
+  localStorage.setItem("tennisClubStore", JSON.stringify(state));
+});
 
-  return Store
+export default function(/* { ssrContext } */) {
+  return Store;
 }
+
+export { Store };

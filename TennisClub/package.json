@@ -11,12 +11,17 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
+    "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
-    "quasar": "^1.0.0"
+    "moment": "^2.29.1",
+    "quasar": "^1.0.0",
+    "vue-chartjs": "^3.5.1",
+    "vue-jwt-decode": "^0.1.0"
   },
   "devDependencies": {
     "@quasar/app": "^2.0.0",
+    "@types/chart.js": "^2.9.30",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
