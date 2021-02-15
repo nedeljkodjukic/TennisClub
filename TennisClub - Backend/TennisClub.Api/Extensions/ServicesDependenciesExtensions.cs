@@ -7,7 +7,11 @@ namespace TennisClub.Api.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            return services.AddScoped<IdentityService>();
+            return services.AddScoped<IdentityService>()
+                .AddSingleton<PlayerService>()
+                .AddSingleton<TournamentService>()
+                .AddSingleton<RankingService>()
+                .AddSingleton<MatchService>();
         }
     }
 }

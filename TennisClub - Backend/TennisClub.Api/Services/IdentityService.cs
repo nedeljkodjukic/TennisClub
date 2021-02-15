@@ -35,7 +35,7 @@ namespace TennisClub.Api.Services
 
             if (user == null)
             {
-                throw new Exception("Ne postoji korisnik");
+                throw new Exception("User does not exists");
             }
 
             var result = await this.signInManager.PasswordSignInAsync(user.UserName, input.Password, false, false);
@@ -49,14 +49,11 @@ namespace TennisClub.Api.Services
                 return JwtAuthExtension.GenerateToken(user, roles, key, 7);
             }
 
-            throw new Exception("Neuspesno logovanje");
+            throw new Exception("Login error");
         }
 
         public async Task<ApplicationUser> RegisterUserAsync(RegisterInputModel input)
         {
-
-            //todo check password and confirmation password
-
             var user = new ApplicationUser(input.UserName)
             {
                 Email = input.Email,
@@ -76,7 +73,6 @@ namespace TennisClub.Api.Services
 
         public async Task RegisterUserToRoleAsync(ApplicationUser user, Role role)
         {
-            //todo ovo prebaci
             if (!(await roleManager.RoleExistsAsync(Role.Admin.ToString())))
                 await roleManager.CreateAsync(new MongoRole(Role.Admin.ToString()));
             if (!(await roleManager.RoleExistsAsync(Role.User.ToString())))
@@ -88,8 +84,7 @@ namespace TennisClub.Api.Services
             }
             else
             {
-                //obrisi usera iz baze
-                throw new Exception("");
+                throw new Exception("Register to role error");
             }
         }
     }

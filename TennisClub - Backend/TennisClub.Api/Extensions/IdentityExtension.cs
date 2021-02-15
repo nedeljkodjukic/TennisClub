@@ -11,6 +11,10 @@ namespace TennisClub.Api.Extensions
     {
         public static IdentityBuilder AddMongoDbProvider(this IServiceCollection services, IConfiguration configuration)
         {
+            string connectionString = configuration["DatabaseSettings:ConnectionString"];
+            string dbName = configuration["DatabaseSettings:DatabaseName"];
+
+            
             return services.AddIdentityMongoDbProvider<ApplicationUser, MongoRole>(options =>
             {
                 options.Password.RequiredLength = 8;
@@ -19,7 +23,8 @@ namespace TennisClub.Api.Extensions
                 options.Password.RequireNonAlphanumeric = true;
                 options.Password.RequireDigit = true;
                 options.User.RequireUniqueEmail = true;
-            }, opt => opt.ConnectionString = configuration.GetConnectionString("MongoDbDatabase"));
+            }, opt => opt.ConnectionString = $"{connectionString}/{dbName}");
+            
         }
     }
 }

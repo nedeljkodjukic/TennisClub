@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using TennisClub.Api.Extensions;
+using TennisClub.Api.Mappings;
 
 namespace TennisClub.Api
 {
@@ -23,13 +24,19 @@ namespace TennisClub.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
 
             services.AddApplicationServices();
 
             services.AddMongoDbProvider(Configuration);
 
             services.AddJwtAuthentication(Configuration);
+
+            services.AddAutoMapper(x =>
+            {
+                x.AddProfile(new InputMappings());
+                x.AddProfile(new OutputMappings());
+            });
 
             services.AddSwaggerGen(x =>
             {
@@ -52,8 +59,9 @@ namespace TennisClub.Api
                 {
                     var exeptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
 
-                    if(exeptionHandlerPathFeature.Error is Exception ex)
+                    if (exeptionHandlerPathFeature!=null && exeptionHandlerPathFeature.Error is Exception ex)
                     {
+                        context.Response.ContentType = "text/plain";
                         context.Response.StatusCode = 500;
                         await context.Response.WriteAsync(ex.Message);
                     }
