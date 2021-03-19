@@ -63,11 +63,11 @@
                   </div>
                   <q-separator />
                   <div class="text-subtitle2 text-weight-medium">
-                    VISINA: {{ playerInfo.height }} kg
+                    VISINA: {{ playerInfo.height }} cm
                   </div>
                   <q-separator />
                   <div class="text-subtitle2 text-weight-medium">
-                    TEŽINA: {{ playerInfo.weight }} cm
+                    TEŽINA: {{ playerInfo.weight }} kg
                   </div>
                   <q-separator />
                   <div class="text-subtitle2 text-weight-medium">

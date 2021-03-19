@@ -17,7 +17,8 @@ namespace TennisClub.Api.Controllers
             this.matchService = matchService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("insert")]
         public async Task<ActionResult<string>> Insert([FromBody] MatchInputModel input)
